@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+}
+
+body {
+    overflow: hidden;
+    font-family: Ubuntu;
+}
+
+#menu {
+    text-align: center;
+    background: #a0bce0;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 30vw;
+    z-index: 10;
+}
+
+#menu button {
+    display: block;
+    width: 80vw;
+    height: 50px;
+    padding: 20px;
+    margin: 10px auto;
+    background: #d9e3f2;
+    border: 1px solid;
+    border-radius: 10px;
+    color: #0000ff;
+}
+
+#game {
+    z-index: 9;
+}
+
+#canvas {
+    background: #28e2b4;
+    position: fixed;
+    width: 100vw;
+    height: 70vh;
+    top: 0;
+    left: 0;
+}
+
+#deadline {
+    position: fixed;
+    width: 100vw;
+    top: 70vh;
+    left: 0;
+    height: 5px;
+}
+
+#control {
+    position: fixed;
+    top: 70vh;
+    left: 0;
+    height: 70vh;
+    width: 100vw;
+    text-align: center;
+    background: yellow;
+}
+
+#control button {
+    width: 30vw;
+    height: 30vw;
+    border-radius: 70%;
+    border: 1px solid;
+    color: #0000ff;
+    background: yellow;
+    margin-left: 0vw;
+    margin-right: 0vw;
+}
+
+#restart button {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+    margin-right: 80vw;
+}

@@ -1,0 +1,15 @@
+{
+    "width": 300,
+    "height": 600,
+    "liveedit": true,
+    "devtools": false,
+    "debug_on_top": true,
+    "dependencies": {
+        "nodejs": "0.0.0",
+        "nodemon": "^2.0.4"
+    },
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    }
+}
