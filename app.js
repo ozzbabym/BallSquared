@@ -51,7 +51,12 @@ function Right() {
 
 function Left() {
     LeftT = true;
-    RightT = false;
+//     RightT = false;
+}
+
+function Left() {
+    LeftT = false;
+//     RightT = false;
 }
 
 
