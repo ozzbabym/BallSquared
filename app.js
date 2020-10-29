@@ -41,27 +41,27 @@ var RightT = false;
 
 function Right() {
     RightT = true;
-//     LeftT = false;
+    LeftT = false;
 
 }
-function RightStop() {
-    RightT = false;
-//     LeftT = false;
+// function RightStop() {
+//     RightT = false;
+// //     LeftT = false;
 
-}
+// }
 
 
 
 
 function Left() {
     LeftT = true;
-//     RightT = false;
+    RightT = false;
 }
 
-function LeftStop() {
-    LeftT = false;
-//     RightT = false;
-}
+// function LeftStop() {
+//     LeftT = false;
+// //     RightT = false;
+// }
 
 
 
