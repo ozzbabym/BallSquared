@@ -41,10 +41,14 @@ var RightT = false;
 
 function Right() {
     RightT = true;
-    LeftT = false;
+//     LeftT = false;
 
 }
+function RightStop() {
+    RightT = false;
+//     LeftT = false;
 
+}
 
 
 
@@ -54,7 +58,7 @@ function Left() {
 //     RightT = false;
 }
 
-function Left() {
+function LeftStop() {
     LeftT = false;
 //     RightT = false;
 }
