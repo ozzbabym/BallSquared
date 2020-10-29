@@ -41,7 +41,13 @@ var RightT = false;
 
 function Right() {
     RightT = true;
-    LeftT = false;
+//     LeftT = false;
+
+}
+
+function RightStop() {
+    RightT = false;
+//     LeftT = false;
 
 }
 
@@ -49,10 +55,12 @@ function Right() {
 
 function Left() {
     LeftT = true;
-    RightT = false;
+//     RightT = false;
+}
 
-
-
+function LeftStop() {
+    LeftT = false;
+//     RightT = false;
 }
 
 function Pause() {
@@ -421,7 +429,7 @@ function draw() {
     ctx.fillStyle = "#00F";
     ctx.strokeStyle = "#F00";
     ctx.font = "italic 10pt Arial";
-    ctx.fillText("Speed: " + speed, H / 2.5, W / 12);
+    ctx.fillText("Speed: " + speed.toFixed(1), H / 2.5, W / 12);
     ctx.fillStyle = "yellow";
 
 
