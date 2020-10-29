@@ -4,6 +4,9 @@
     box-sizing: border-box;
     text-decoration: none;
     outline: none;
+    max-width: 400px;
+    max-height: 800px;
+    
 }
 
 body {
