@@ -5,11 +5,11 @@ var canvas, ctx;
 var W = window.innerWidth;
 var H = window.innerHeight;
 
-if(W>330){
-    W=330
+if(W>400){
+    W=400
 }
-if(H>520){
-    H=520
+if(H>600){
+    H=600
 }
 
 
@@ -422,25 +422,6 @@ function draw() {
     if (GameOver <= 10) {
         GameOver1();
     }
-
-    ctx.fillStyle = "yellow";
-    ctx.beginPath();
-    ctx.fillStyle = "#00F";
-    ctx.strokeStyle = "#F00";
-    ctx.font = "italic 10pt Arial";
-    ctx.fillText("Score: " + score, H / 30, W / 12);
-    ctx.fillStyle = "yellow";
-
-    ctx.fillStyle = "yellow";
-    ctx.beginPath();
-    ctx.fillStyle = "#00F";
-    ctx.strokeStyle = "#F00";
-    ctx.font = "italic 10pt Arial";
-    ctx.fillText("Speed: " + speed.toFixed(1), H / 2.5, W / 12);
-    ctx.fillStyle = "yellow";
-
-
-}
 
     ctx.fillStyle = "yellow";
     ctx.beginPath();
