@@ -19,8 +19,8 @@ body {
     
     background: #a0bce0;
     position: fixed;
-    width: 110vw;
-    height: 100vh;
+    width: 140vw;
+    height: 120vh;
     padding-top: 30vw;
     z-index: 10;
     max-width: 420px;
@@ -35,7 +35,7 @@ body {
 
 #menu button {
     display: block;
-    width: 20vh;
+    width: 15vh;
     height: 10vw;
     padding: 20px;
     margin: 10px auto;
@@ -73,8 +73,8 @@ body {
     position: fixed;
     top: 62vh;
     left: 0;
-    height: 90vh;
-    width: 90vw;
+    height: 120vh;
+    width: 130vw;
     text-align: center;
     background: yellow;
     padding-left: 20px;
@@ -84,7 +84,7 @@ body {
 #control button {
     
     float: left;
-    width: 130px;
+    width: 120px;
     height: 100px;
     border-radius: 70%;
     border: 1px solid;
@@ -108,4 +108,5 @@ body {
     width: 400px;
     height: auto;
     margin: 0 auto;
+    
 }
