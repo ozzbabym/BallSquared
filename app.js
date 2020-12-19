@@ -6,10 +6,10 @@ var W = window.innerWidth;
 var H = window.innerHeight;
 
 if(W>400){
-    W=400
+    W=420
 }
 if(H>600){
-    H=600
+    H=640
 }
 
 
@@ -441,3 +441,4 @@ function draw() {
 
 
 }
+
