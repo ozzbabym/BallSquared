@@ -4,14 +4,14 @@
     box-sizing: border-box;
     text-decoration: none;
     outline: none;
-    max-width: 260px;
-    max-height: 480px;
+    max-width: 480px;
+    max-height: 640px;
     margin: 0 auto;
     
 }
 
 body {
-/*     overflow: hidden; */
+    overflow: hidden;
     font-family: Ubuntu;
 }
 
