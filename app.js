@@ -5,7 +5,12 @@ var canvas, ctx;
 var W = window.innerWidth;
 var H = window.innerHeight;
 
-
+if(W>480){
+    W=480
+}
+if(H>640){
+    h=640
+}
 
 
 
