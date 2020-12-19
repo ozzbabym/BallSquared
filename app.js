@@ -6,10 +6,10 @@ var W = window.innerWidth;
 var H = window.innerHeight;
 
 if(W>480){
-    W=280
+    W=330
 }
 if(H>640){
-    H=460
+    H=520
 }
 
 
