@@ -441,3 +441,22 @@ function draw() {
 
 
 }
+
+    ctx.fillStyle = "yellow";
+    ctx.beginPath();
+    ctx.fillStyle = "#00F";
+    ctx.strokeStyle = "#F00";
+    ctx.font = "italic 10pt Arial";
+    ctx.fillText("Score: " + score, H / 30, W / 12);
+    ctx.fillStyle = "yellow";
+
+    ctx.fillStyle = "yellow";
+    ctx.beginPath();
+    ctx.fillStyle = "#00F";
+    ctx.strokeStyle = "#F00";
+    ctx.font = "italic 10pt Arial";
+    ctx.fillText("Speed: " + speed.toFixed(1), H / 2.5, W / 12);
+    ctx.fillStyle = "yellow";
+
+
+}
