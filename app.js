@@ -237,38 +237,38 @@ function draw() {
     }
     console.log(angle5)
     if (((dc <= 10) || (dc <= 0)) && (angle5 > -0.785) && (angle5 < 0.785)) {
-        angle5 = 4.71 + angle;
-        Stena();
+        angle5 = 4.71 + angle/2;
+        // Stena();
     }
     if (((dc3 <= 10) || (dc3 <= 0)) && (angle5 > 3.925) && (angle5 < 5.495)) {
-        angle5 = 3.14 + angle;
-        Stena();
+        angle5 = 3.14 + angle/2;
+        // Stena();
     }
 
     if (((dc2 <= 10) || (dc2 <= 0)) && (angle5 > 2.3557) && (angle5 < 3.925)) {
-        angle5 = 1.57 + angle;
-        Stena();
+        angle5 = 1.57 + angle/2;
+        // Stena();
     }
     if (((dc1 <= 10) || (dc1 <= 0)) && (angle5 < 1.57 + 0.785) && (angle5 > 0.785)) {
-        angle5 = angle;
-        Stena();
+        angle5 = angle/2;
+        // Stena();
     }
     ///
     if (((dc3 <= 10) || (dc3 <= 0)) && (angle5 > -0.785) && (angle5 < 0.785)) {
-        angle5 = 1.57 + angle;
-        Stena();
+        angle5 = 1.57 + angle/2;
+        // Stena();
     }
     if (((dc <= 10) || (dc <= 0)) && (angle5 > 0.785) && (angle5 < 0.785 + 1.57)) {
-        angle5 = 3.14 + angle;
-        Stena();
+        angle5 = 3.14 + angle/2;
+        // Stena();
     }
     if (((dc1 <= 10) || (dc1 <= 0)) && (angle5 > 1.57 + 0.785) && (angle5 < 3.925)) {
-        angle5 = 4.71 + angle;
-        Stena();
+        angle5 = 4.71 + angle/2;
+        // Stena();
     }
     if (((dc2 <= 10) || (dc2 <= 0)) && (angle5 > 3.925) && (angle5 < 4.71 + 0.785)) {
-        angle5 = angle ;
-        Stena();
+        angle5 = angle/2;
+        // Stena();
     }
 
     GameOver = Math.sqrt(Math.pow((centerX - positionBallX), 2) + Math.pow((centerY - positionBallY), 2));
