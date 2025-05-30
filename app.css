@@ -1,110 +1,105 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    outline: none;
-}
-
-body {
-    overflow: hidden;
-    font-family: Ubuntu;
-}
-
-.main-container {
-    width: 100%;
-    background: yellow;
-    height: 100vh;
-}
-
-#menu {
-    background: #a0bce0;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.menu-inner-wrapper {
-
-}
-
-.control-wrapper {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
-
-.canvas-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    /* width: 420px; */
-    margin: 0 auto;
-}
-
-#menu button {
-    display: block;
-    width: 200px;
-    height: 50px;
-    margin: 10px auto;
-    background: #d9e3f2;
-    border: 1px solid;
-    border-radius: 10px;
-    color: #0000ff;
-}
-
-#game {
-    z-index: 9;
-}
-
-#canvas {
-    background: #28e2b4;
-    width: 420px;
-    height: 420px;
-}
-
-#control {
-    margin: 0 auto;
-    height: 200px;
-    width: 100%;
-    text-align: center;
-    background: yellow;
-    padding-left: 20px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-#control button {
-    width: 95px;
-    height: 95px;
-    border-radius: 70%;
-    border: 1px solid;
-    color: #0000ff;
-    background: yellow;
-}
-
-#restart {
-    display: flex;
-}
-
-#restart button {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-}
-
-.body{
-    width: 400px;
-    height: auto;
-    margin: 0 auto;
-    
-}
-
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+        
+        body {
+            font-family: Ubuntu, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: yellow;
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        #menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(160, 188, 224, 0.9);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .menu-inner-wrapper {
+            text-align: center;
+        }
+        
+        #menu button {
+            width: 200px;
+            height: 50px;
+            margin: 10px auto;
+            background: #d9e3f2;
+            border: 1px solid;
+            border-radius: 10px;
+            color: #0000ff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .canvas-wrapper {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #canvas {
+            background: #28e2b4;
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            aspect-ratio: 1/1;
+        }
+        
+        #control {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            background: yellow;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .control-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        #control button {
+            width: 95px;
+            height: 95px;
+            border-radius: 70%;
+            border: 1px solid;
+            color: #0000ff;
+            background: yellow;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        #restart {
+            display: flex;
+            justify-content: center;
+        }
+        
+        #restart button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }

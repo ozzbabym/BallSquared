@@ -1,38 +1,34 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <title>Ball Squared</title>
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-    <meta name="full-screen" content="yes">
-    <meta charset="urf-8">
-    <script src="app.js"></script>
-    <link rel="stylesheet" href="app.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./app.css">
 </head>
-
 <body>
     <div class="main-container">
-        <div id="menu" class="menu">
+        <div id="menu">
             <div class="menu-inner-wrapper">
                 <h1>Ball Squared</h1>
-                <button id="new_game" onclick="new_game()">New Game</button>
+                <button id="new_game">New Game</button>
             </div>
         </div>
         <div class="canvas-wrapper">
             <canvas id="canvas"></canvas>
             <div id="control">
                 <div id="restart">
-                    <button onclick="Restart()">R</button>
-                </div >
+                    <button id="restart_btn">R</button>
+                </div>
                 <div class="control-wrapper">
-                    <button id="Left" onclick="Left()">Left</button>
-                    <button id="Stop" onclick="Stop()">Stop</button>
-                    <button id="Right" onclick="Right()">Right</button>
+                    <button id="left_btn">Left</button>
+                    <button id="stop_btn">Stop</button>
+                    <button id="right_btn">Right</button>
                 </div>
             </div>
         </div>
     </div>
-</body>
 
+    <script src="./app.js"></script>
+</body>
 </html>
