@@ -3,32 +3,33 @@ const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const HALF_PI = PI / 2;
 const MAX_SPEED = 3;
-const FRAME_RATE = 50; // ~20ms per frame
 const BALL_RADIUS = 8;
 const FRUIT_RADIUS = 10;
 const CENTER_RADIUS = 5;
+const SQUARE_SIZE = 0.4; // Relative to canvas size
 
 // Game state
 const state = {
     canvas: null,
     ctx: null,
-    width: 480,
-    height: 640,
+    width: 0,
+    height: 0,
     centerX: 0,
     centerY: 0,
     angle: 0,
-    radius: 0,
+    squareHalfDiagonal: 0,
     positionBallX: 0,
     positionBallY: 0,
     ballx: 0,
     bally: 0,
     speed: 1,
     score: 0,
-    ballAngle: 0, // Направление движения шарика
+    ballAngle: 0,
     isBallActive: false,
     leftPressed: false,
     rightPressed: false,
     gameActive: false,
+    lastFrameTime: 0,
     audio: {
         stena: new Audio("stena.mp3"),
         fruit: new Audio("fruit.mp3"),
@@ -49,38 +50,56 @@ const elements = {
 
 // Initialize game
 function init() {
-    // Calculate dimensions
-    state.centerX = state.width / 2;
-    state.centerY = state.height / 3;
-    state.radius = Math.min(state.width, state.height) * 0.4;
+    setupCanvas();
+    setupEventListeners();
+    showMenu();
+}
+
+function setupCanvas() {
+    state.canvas = elements.canvas;
+    state.ctx = state.canvas.getContext('2d');
     
     // Set canvas dimensions
-    elements.canvas.width = state.width;
-    elements.canvas.height = state.height;
+    resizeCanvas();
     
-    // Set up event listeners
-    setupEventListeners();
+    // Calculate game dimensions
+    state.centerX = state.width / 2;
+    state.centerY = state.height / 2;
+    state.squareHalfDiagonal = Math.min(state.width, state.height) * SQUARE_SIZE / Math.sqrt(2);
+}
+
+function resizeCanvas() {
+    const container = document.querySelector('.main-container');
+    state.width = container.clientWidth;
+    state.height = container.clientHeight;
     
-    // Start game
-    newGame();
+    // Adjust for device pixel ratio
+    const dpr = window.devicePixelRatio || 1;
+    state.canvas.width = state.width * dpr;
+    state.canvas.height = state.height * dpr;
+    state.canvas.style.width = state.width + 'px';
+    state.canvas.style.height = state.height + 'px';
+    state.ctx.scale(dpr, dpr);
 }
 
 function resetGame() {
-    state.positionBallX = state.centerX + (state.radius / 4);
-    state.positionBallY = state.centerY + (state.radius / 4);
+    state.positionBallX = state.centerX;
+    state.positionBallY = state.centerY - state.squareHalfDiagonal * 0.7;
     placeNewFruit();
     state.score = 0;
     state.speed = 1;
     state.isBallActive = true;
     state.angle = 0;
-    state.ballAngle = Math.random() * TWO_PI; // Random initial direction
+    state.ballAngle = Math.random() * TWO_PI;
     state.gameActive = true;
+    state.lastFrameTime = performance.now();
 }
 
 function placeNewFruit() {
-    // Place fruit at random position but not too close to center
-    let angle = Math.random() * TWO_PI;
-    let distance = state.radius * 0.3 + Math.random() * state.radius * 0.5;
+    // Place fruit at random position within the square
+    const angle = state.angle + Math.random() * TWO_PI;
+    const distance = state.squareHalfDiagonal * 0.3 + Math.random() * state.squareHalfDiagonal * 0.5;
+    
     state.ballx = state.centerX + distance * Math.cos(angle);
     state.bally = state.centerY + distance * Math.sin(angle);
 }
@@ -89,26 +108,25 @@ function setupEventListeners() {
     // Button events
     elements.newGameBtn.addEventListener('click', newGame);
     elements.restartBtn.addEventListener('click', restart);
-    elements.leftBtn.addEventListener('click', () => { 
-        state.leftPressed = true; 
-        state.rightPressed = false;
-    });
-    elements.rightBtn.addEventListener('click', () => { 
-        state.rightPressed = true; 
-        state.leftPressed = false;
-    });
-    elements.stopBtn.addEventListener('click', stop);
     
-    // Touch events for mobile
-    elements.leftBtn.addEventListener('touchstart', () => { 
-        state.leftPressed = true; 
-        state.rightPressed = false;
+    // Control buttons
+    elements.leftBtn.addEventListener('mousedown', () => state.leftPressed = true);
+    elements.leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        state.leftPressed = true;
     });
-    elements.rightBtn.addEventListener('touchstart', () => { 
-        state.rightPressed = true; 
-        state.leftPressed = false;
+    
+    elements.rightBtn.addEventListener('mousedown', () => state.rightPressed = true);
+    elements.rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        state.rightPressed = true;
     });
-    elements.stopBtn.addEventListener('touchstart', stop);
+    
+    elements.stopBtn.addEventListener('mousedown', stop);
+    elements.stopBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        stop();
+    });
     
     // Release events
     const releaseControls = () => {
@@ -116,29 +134,20 @@ function setupEventListeners() {
         state.rightPressed = false;
     };
     
-    elements.leftBtn.addEventListener('touchend', releaseControls);
-    elements.rightBtn.addEventListener('touchend', releaseControls);
-    elements.stopBtn.addEventListener('touchend', releaseControls);
+    document.addEventListener('mouseup', releaseControls);
+    document.addEventListener('touchend', releaseControls);
     
     // Window resize
-    window.addEventListener('resize', handleResize);
-}
-
-function handleResize() {
-    state.width = 480;
-    state.height = 640;
-    state.centerX = state.width / 2;
-    state.centerY = state.height / 3;
-    state.radius = Math.min(state.width, state.height) * 0.4;
-    
-    elements.canvas.width = state.width;
-    elements.canvas.height = state.height;
+    window.addEventListener('resize', () => {
+        setupCanvas();
+        if (state.gameActive) draw();
+    });
 }
 
 function newGame() {
     hideMenu();
     resetGame();
-    gameLoop();
+    requestAnimationFrame(gameLoop);
 }
 
 function restart() {
@@ -150,12 +159,13 @@ function stop() {
     state.rightPressed = false;
 }
 
-function hideMenu() {
-    elements.menu.style.display = "none";
-}
-
 function showMenu() {
     elements.menu.style.display = "flex";
+    state.gameActive = false;
+}
+
+function hideMenu() {
+    elements.menu.style.display = "none";
 }
 
 function gameOver() {
@@ -166,6 +176,7 @@ function gameOver() {
     state.ctx.fillText("Game Over", state.centerX - 70, state.centerY - 20);
     state.audio.gameover.play().catch(e => console.log("Audio play failed:", e));
     state.gameActive = false;
+    setTimeout(showMenu, 1500);
 }
 
 function playCollisionSound() {
@@ -177,11 +188,15 @@ function playFruitSound() {
 }
 
 function getSquarePoints() {
+    const cos = Math.cos(state.angle);
+    const sin = Math.sin(state.angle);
+    const size = state.squareHalfDiagonal;
+    
     return [
-        { x: state.centerX + state.radius * Math.cos(state.angle), y: state.centerY + state.radius * Math.sin(state.angle) },
-        { x: state.centerX + state.radius * Math.cos(state.angle + HALF_PI), y: state.centerY + state.radius * Math.sin(state.angle + HALF_PI) },
-        { x: state.centerX + state.radius * Math.cos(state.angle + PI), y: state.centerY + state.radius * Math.sin(state.angle + PI) },
-        { x: state.centerX + state.radius * Math.cos(state.angle + PI + HALF_PI), y: state.centerY + state.radius * Math.sin(state.angle + PI + HALF_PI) }
+        { x: state.centerX + size * (cos - sin), y: state.centerY + size * (sin + cos) },
+        { x: state.centerX + size * (-cos - sin), y: state.centerY + size * (-sin + cos) },
+        { x: state.centerX + size * (-cos + sin), y: state.centerY + size * (-sin - cos) },
+        { x: state.centerX + size * (cos + sin), y: state.centerY + size * (sin - cos) }
     ];
 }
 
@@ -288,19 +303,19 @@ function updateBallPosition() {
 function updateSquareRotation() {
     if (!state.gameActive) return;
     
-    // Limit angle range
-    if (state.angle >= PI) state.angle -= TWO_PI;
-    else if (state.angle <= -PI) state.angle += TWO_PI;
-    
     // Update angle based on controls
-    if (state.leftPressed) state.angle -= 0.02;
-    if (state.rightPressed) state.angle += 0.02;
+    if (state.leftPressed) state.angle -= 0.03;
+    if (state.rightPressed) state.angle += 0.03;
+    
+    // Keep angle in reasonable range
+    if (state.angle > PI) state.angle -= TWO_PI;
+    if (state.angle < -PI) state.angle += TWO_PI;
 }
 
 function draw() {
     const ctx = state.ctx;
     
-    // Clear canvas
+    // Clear canvas with yellow background
     ctx.fillStyle = "yellow";
     ctx.fillRect(0, 0, state.width, state.height);
     
@@ -309,11 +324,12 @@ function draw() {
     
     ctx.beginPath();
     ctx.strokeStyle = "red";
+    ctx.lineWidth = 4;
     ctx.moveTo(squarePoints[0].x, squarePoints[0].y);
     for (let i = 1; i <= 4; i++) {
         ctx.lineTo(squarePoints[i % 4].x, squarePoints[i % 4].y);
     }
-    ctx.lineWidth = 7;
+    ctx.closePath();
     ctx.fillStyle = "yellow";
     ctx.fill();
     ctx.stroke();
@@ -322,7 +338,7 @@ function draw() {
     ctx.beginPath();
     ctx.arc(state.centerX, state.centerY, CENTER_RADIUS, 0, TWO_PI);
     ctx.strokeStyle = "green";
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 3;
     ctx.fillStyle = "green";
     ctx.fill();
     ctx.stroke();
@@ -336,7 +352,7 @@ function draw() {
     ctx.fill();
     ctx.stroke();
     
-    // Draw fruit
+    // Draw fruit (blue circle)
     ctx.beginPath();
     ctx.arc(state.ballx, state.bally, FRUIT_RADIUS, 0, TWO_PI);
     ctx.strokeStyle = "blue";
@@ -348,26 +364,21 @@ function draw() {
     // Draw score and speed
     ctx.fillStyle = "#00F";
     ctx.strokeStyle = "#F00";
-    ctx.font = "italic 10pt Arial";
+    ctx.font = "italic 16px Arial";
     ctx.fillText("Score: " + state.score, 20, 30);
-    ctx.fillText("Speed: " + state.speed.toFixed(1), state.width - 100, 30);
+    ctx.fillText("Speed: " + state.speed.toFixed(1), state.width - 120, 30);
 }
 
-function gameLoop() {
-    if (state.gameActive) {
-        updateSquareRotation();
-        updateBallPosition();
-        checkCollisions();
-    }
+function gameLoop(timestamp) {
+    if (!state.gameActive) return;
     
+    updateSquareRotation();
+    updateBallPosition();
+    checkCollisions();
     draw();
     
-    setTimeout(gameLoop, 1000/FRAME_RATE);
+    requestAnimationFrame(gameLoop);
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    state.canvas = elements.canvas;
-    state.ctx = state.canvas.getContext('2d');
-    init();
-});
+document.addEventListener('DOMContentLoaded', init);
