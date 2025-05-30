@@ -4,7 +4,130 @@
     <title>Ball Squared</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./app.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: Ubuntu, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: yellow;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            max-height: 640px;
+            margin: auto;
+        }
+
+        #menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(160, 188, 224, 0.9);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .menu-inner-wrapper {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #menu button {
+            width: 80%;
+            max-width: 200px;
+            height: 50px;
+            margin: 10px auto;
+            background: #d9e3f2;
+            border: 2px solid #0000ff;
+            border-radius: 25px;
+            color: #0000ff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #menu h1 {
+            color: #0000ff;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas {
+            background: yellow;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #control {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px;
+            z-index: 5;
+        }
+
+        .control-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        #control button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid #0000ff;
+            color: #0000ff;
+            background: rgba(255, 255, 0, 0.7);
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #restart {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        #restart button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
     <div class="main-container">
@@ -38,16 +161,19 @@ const MAX_SPEED = 3;
 const BALL_RADIUS = 8;
 const FRUIT_RADIUS = 10;
 const CENTER_RADIUS = 5;
-const BASE_SQUARE_SIZE = 0.4; // Relative to canvas size
-const LEVEL_DURATION = 60000; // 1 minute in milliseconds
+const BASE_SQUARE_SIZE = 0.3; // Smaller base size to accommodate larger shapes
+const LEVEL_DURATION = 30000; // 30 seconds in milliseconds
+const ROTATION_ZONE_RADIUS = 100; // Area near center where shape can change
+const SHAPE_CHANGE_COOLDOWN = 1000; // 1 second cooldown after change
+const MAX_SHAPE_SIZE = 0.45; // Maximum size relative to canvas to prevent going out of bounds
 
-// Shape types
+// Shape types - all larger than square (1.0)
 const SHAPES = {
-    SQUARE: 'square',
-    TRIANGLE: 'triangle',
-    PENTAGON: 'pentagon',
-    CIRCLE: 'circle',
-    HEXAGON: 'hexagon'
+    SQUARE: {name: 'square', sizeFactor: 1.0},
+    TRIANGLE: {name: 'triangle', sizeFactor: 1.3},
+    PENTAGON: {name: 'pentagon', sizeFactor: 1.2},
+    CIRCLE: {name: 'circle', sizeFactor: 1.4},
+    HEXAGON: {name: 'hexagon', sizeFactor: 1.2}
 };
 
 // Game state
@@ -73,12 +199,15 @@ const state = {
     gameActive: false,
     lastFrameTime: 0,
     currentShape: SHAPES.SQUARE,
-    shapeSizeFactor: 1,
     lastLevelChangeTime: 0,
+    lastShapeChangeTime: 0,
+    showShapeChangeEffect: false,
+    shapeChangeEffectTime: 0,
     audio: {
         stena: new Audio("stena.mp3"),
         fruit: new Audio("fruit.mp3"),
-        gameover: new Audio("gameover.mp3")
+        gameover: new Audio("gameover.mp3"),
+        shapeChange: new Audio("shapeChange.mp3")
     }
 };
 
@@ -139,8 +268,9 @@ function resetGame() {
     state.gameActive = true;
     state.lastFrameTime = performance.now();
     state.currentShape = SHAPES.SQUARE;
-    state.shapeSizeFactor = 1;
     state.lastLevelChangeTime = performance.now();
+    state.lastShapeChangeTime = 0;
+    state.showShapeChangeEffect = false;
 }
 
 function placeNewFruit() {
@@ -235,12 +365,26 @@ function playFruitSound() {
     state.audio.fruit.play().catch(e => console.log("Audio play failed:", e));
 }
 
+function playShapeChangeSound() {
+    state.audio.shapeChange.play().catch(e => console.log("Audio play failed:", e));
+}
+
 function getShapePoints() {
-    const size = state.squareHalfDiagonal * state.shapeSizeFactor;
+    // Calculate size ensuring it doesn't go out of bounds
+    const maxPossibleSize = Math.min(
+        Math.min(state.width, state.height) * MAX_SHAPE_SIZE / Math.sqrt(2),
+        state.squareHalfDiagonal * state.currentShape.sizeFactor
+    );
+    
+    const size = Math.min(
+        maxPossibleSize,
+        state.squareHalfDiagonal * state.currentShape.sizeFactor
+    );
+    
     const points = [];
     
-    switch (state.currentShape) {
-        case SHAPES.SQUARE:
+    switch (state.currentShape.name) {
+        case 'square':
             const cos = Math.cos(state.angle);
             const sin = Math.sin(state.angle);
             
@@ -252,7 +396,7 @@ function getShapePoints() {
             );
             break;
             
-        case SHAPES.TRIANGLE:
+        case 'triangle':
             for (let i = 0; i < 3; i++) {
                 const angle = state.angle + i * TWO_PI / 3;
                 points.push({
@@ -262,7 +406,7 @@ function getShapePoints() {
             }
             break;
             
-        case SHAPES.PENTAGON:
+        case 'pentagon':
             for (let i = 0; i < 5; i++) {
                 const angle = state.angle + i * TWO_PI / 5;
                 points.push({
@@ -272,7 +416,7 @@ function getShapePoints() {
             }
             break;
             
-        case SHAPES.HEXAGON:
+        case 'hexagon':
             for (let i = 0; i < 6; i++) {
                 const angle = state.angle + i * TWO_PI / 6;
                 points.push({
@@ -282,7 +426,7 @@ function getShapePoints() {
             }
             break;
             
-        case SHAPES.CIRCLE:
+        case 'circle':
             // For circle, we'll return points approximating a circle
             for (let i = 0; i < 16; i++) {
                 const angle = state.angle + i * TWO_PI / 16;
@@ -410,6 +554,11 @@ function updateSquareRotation() {
     if (state.angle < -PI) state.angle += TWO_PI;
 }
 
+function isBallInRotationZone() {
+    const distanceToCenter = Math.hypot(state.centerX - state.positionBallX, state.centerY - state.positionBallY);
+    return distanceToCenter <= ROTATION_ZONE_RADIUS;
+}
+
 function changeLevel() {
     const shapeKeys = Object.keys(SHAPES);
     let newShape;
@@ -420,11 +569,10 @@ function changeLevel() {
     } while (newShape === state.currentShape && shapeKeys.length > 1);
     
     state.currentShape = newShape;
-    
-    // Random size variation (0.8 to 1.2 of original size)
-    state.shapeSizeFactor = 0.8 + Math.random() * 0.4;
-    
     state.lastLevelChangeTime = performance.now();
+    state.showShapeChangeEffect = true;
+    state.shapeChangeEffectTime = performance.now();
+    playShapeChangeSound();
 }
 
 function draw() {
@@ -487,15 +635,36 @@ function draw() {
     ctx.fillText("Speed: " + state.speed.toFixed(1), state.width - 120, 30);
     
     // Draw current shape info
-    ctx.fillText("Shape: " + state.currentShape, state.width / 2 - 50, 30);
+    ctx.fillText("Shape: " + state.currentShape.name, state.width / 2 - 50, 30);
+    
+    // Draw shape change effect if active
+    if (state.showShapeChangeEffect) {
+        const effectDuration = 500; // 0.5 seconds
+        const elapsed = performance.now() - state.shapeChangeEffectTime;
+        if (elapsed < effectDuration) {
+            const alpha = 1 - (elapsed / effectDuration);
+            ctx.beginPath();
+            ctx.arc(state.centerX, state.centerY, 
+                   ROTATION_ZONE_RADIUS * (1 + elapsed/effectDuration), 
+                   0, TWO_PI);
+            ctx.strokeStyle = `rgba(255, 0, 0, ${alpha})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        } else {
+            state.showShapeChangeEffect = false;
+        }
+    }
 }
 
 function gameLoop(timestamp) {
     if (!state.gameActive) return;
     
-    // Check if it's time to change level
-    if (timestamp - state.lastLevelChangeTime > LEVEL_DURATION) {
+    // Check if it's time to change level and ball is in rotation zone
+    if (timestamp - state.lastLevelChangeTime > LEVEL_DURATION && 
+        isBallInRotationZone() && 
+        timestamp - state.lastShapeChangeTime > SHAPE_CHANGE_COOLDOWN) {
         changeLevel();
+        state.lastShapeChangeTime = timestamp;
     }
     
     updateSquareRotation();
