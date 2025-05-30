@@ -350,7 +350,7 @@ function gameOver() {
     state.ctx.beginPath();
     state.ctx.fillStyle = "#00F";
     state.ctx.strokeStyle = "#F00";
-    state.ctx.font = "italic 20pt Arial";
+    state.ctx.font = "MedievalSharp 20pt Arial";
     state.ctx.fillText("Game Over", state.centerX - 70, state.centerY - 20);
     state.audio.gameover.play().catch(e => console.log("Audio play failed:", e));
     state.gameActive = false;
@@ -630,7 +630,7 @@ function draw() {
     // Draw score and speed
     ctx.fillStyle = "#00F";
     ctx.strokeStyle = "#F00";
-    ctx.font = "italic 16px Arial";
+    ctx.font = "MedievalSharp 16px Arial";
     ctx.fillText("Score: " + state.score, 20, 30);
     ctx.fillText("Speed: " + state.speed.toFixed(1), state.width - 120, 30);
     
