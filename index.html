@@ -4,6 +4,9 @@
     <title>Ball Squared Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
+    <!-- Yandex.RTB -->
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
     <style>
         * {
             margin: 0;
@@ -25,13 +28,13 @@
         }
 
         .main-container {
-            position: relative;
+            top: 0;
+            bottom: 0;
+            position: fixed;
             width: 100%;
             max-width: 420px;
             height: 100%;
-            max-height: 640px;
-            margin: auto;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             background: #fff;
             overflow: hidden;
         }
@@ -167,15 +170,19 @@
 
         #shop-btn {
             position: absolute;
-            top: 20px;
+            top: 100px;
             right: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.9);
             border: none;
+            text-align: center;
+            display: flex;
             color: #1976d2;
             font-size: 20px;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
             cursor: pointer;
             z-index: 10;
@@ -261,6 +268,16 @@
                     <button id="right_btn">→</button>
                 </div>
             </div>
+            <!-- Yandex.RTB R-A-15813950-32 -->
+            <script>
+                window.yaContextCb.push(() => {
+                    Ya.Context.AdvManager.render({
+                        "blockId": "R-A-15813950-32",
+                        "type": "fullscreen",
+                        "platform": "touch"
+                    })
+                })
+            </script>
         </div>
         <div id="shop-btn">$</div>
         <div class="level-up">Level Up!</div>
@@ -1009,15 +1026,6 @@ function draw() {
     ctx.strokeText("Shape: " + state.currentShape.name, state.width / 2, 30);
     ctx.fillText("Shape: " + state.currentShape.name, state.width / 2, 30);
     
-    // Draw rotation zone indicator if ball is near center
-    if (isBallInRotationZone()) {
-        ctx.beginPath();
-        ctx.arc(state.centerX, state.centerY, ROTATION_ZONE_RADIUS, 0, TWO_PI);
-        ctx.strokeStyle = "rgba(25, 118, 210, 0.5)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-    
     // Draw shape change effect if active
     if (state.showShapeChangeEffect) {
         const effectDuration = 500;
@@ -1070,6 +1078,20 @@ function gameLoop(timestamp) {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <script src="./v2.js"></script>
+    <script>
+        window.onload = async function() {
+            window.ysdk = await YaGames.init();
+            console.log("Яндекс SDK загружен!");
+            ysdk.adv.showRewardedVideo({
+                callbacks: {
+                    onRewarded: () => { alert("Вы получили награду!"); },
+                    onClose: () => { console.log("Реклама закрыта"); },
+                    onError: (e) => { console.error("Ошибка:", e); }
+                }
+            });
+        };
     </script>
 </body>
 </html>
