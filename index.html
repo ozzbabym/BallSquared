@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Ball Squared</title>
+    <title>Ball Squared Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <style>
@@ -11,13 +11,14 @@
             box-sizing: border-box;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body {
-            font-family: Ubuntu, sans-serif;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
             overflow: hidden;
             height: 100vh;
-            background: yellow;
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -30,6 +31,9 @@
             height: 100%;
             max-height: 640px;
             margin: auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            background: #fff;
+            overflow: hidden;
         }
 
         #menu {
@@ -38,38 +42,64 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(160, 188, 224, 0.9);
-            z-index: 10;
+            background: rgba(25, 118, 210, 0.95);
+            z-index: 20;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            transition: all 0.5s ease;
         }
 
         .menu-inner-wrapper {
             text-align: center;
             padding: 20px;
+            width: 90%;
+            max-width: 300px;
         }
 
         #menu button {
-            width: 80%;
-            max-width: 200px;
-            height: 50px;
-            margin: 10px auto;
-            background: #d9e3f2;
-            border: 2px solid #0000ff;
-            border-radius: 25px;
-            color: #0000ff;
-            font-size: 18px;
+            width: 100%;
+            height: 60px;
+            margin: 15px auto;
+            background: #fff;
+            border: none;
+            border-radius: 30px;
+            color: #1976d2;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        #menu button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         #menu h1 {
-            color: #0000ff;
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .menu-logo {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
             margin-bottom: 20px;
-            font-size: 28px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .menu-logo span {
+            font-size: 50px;
+            color: #1976d2;
         }
 
         .canvas-wrapper {
@@ -79,7 +109,7 @@
         }
 
         #canvas {
-            background: yellow;
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
             display: block;
             width: 100%;
             height: 100%;
@@ -87,7 +117,7 @@
 
         #control {
             position: absolute;
-            bottom: 10px;
+            bottom: 0;
             left: 0;
             right: 0;
             text-align: center;
@@ -98,34 +128,112 @@
         .control-wrapper {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 20px;
+            margin-top: 15px;
         }
 
         #control button {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 2px solid #0000ff;
-            color: #0000ff;
-            background: rgba(255, 255, 0, 0.7);
-            font-size: 20px;
+            width: 149px;
+            height: 85px;
+            border-radius: 12px;
+            border: none;
+            color: white;
+            background: rgba(25, 118, 210, 0.9);
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
-            user-select: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        #control button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         #restart {
             display: flex;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         #restart button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 20px;
+            background: rgba(233, 30, 99, 0.9);
+        }
+
+        #shop-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            font-size: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            color: #1976d2;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        #ad-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 15;
+        }
+
+        #close-ad {
+            position: absolute;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .level-up {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 12;
+        }
+
+        .bonus-notification {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 12;
         }
     </style>
 </head>
@@ -133,22 +241,35 @@
     <div class="main-container">
         <div id="menu">
             <div class="menu-inner-wrapper">
-                <h1>Ball Squared</h1>
+                <div class="menu-logo">
+                    <span>⚽</span>
+                </div>
+                <h1>Ball Squared Pro</h1>
                 <button id="new_game">New Game</button>
+                <button id="continue_game" style="display:none">Continue</button>
+                <button id="shop_btn">Shop</button>
             </div>
         </div>
         <div class="canvas-wrapper">
             <canvas id="canvas"></canvas>
             <div id="control">
                 <div id="restart">
-                    <button id="restart_btn">R</button>
+                    <button id="restart_btn">↻</button>
                 </div>
                 <div class="control-wrapper">
                     <button id="left_btn">←</button>
-                    <button id="stop_btn">■</button>
                     <button id="right_btn">→</button>
                 </div>
             </div>
+        </div>
+        <div id="shop-btn">$</div>
+        <div class="level-up">Level Up!</div>
+        <div class="bonus-notification">+10 Bonus!</div>
+        
+        <!-- Ad container (would be replaced with real ad) -->
+        <div id="ad-container" style="display:none">
+            <span>Advertisement</span>
+            <button id="close-ad">×</button>
         </div>
     </div>
 
@@ -157,23 +278,33 @@
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const HALF_PI = PI / 2;
-const MAX_SPEED = 3;
-const BALL_RADIUS = 8;
-const FRUIT_RADIUS = 10;
-const CENTER_RADIUS = 5;
-const BASE_SQUARE_SIZE = 0.3; // Smaller base size to accommodate larger shapes
-const LEVEL_DURATION = 30000; // 30 seconds in milliseconds
-const ROTATION_ZONE_RADIUS = 100; // Area near center where shape can change
-const SHAPE_CHANGE_COOLDOWN = 1000; // 1 second cooldown after change
-const MAX_SHAPE_SIZE = 0.45; // Maximum size relative to canvas to prevent going out of bounds
+const MAX_SPEED = 5;
+const BALL_RADIUS = 10;
+const FRUIT_RADIUS = 12;
+const CENTER_RADIUS = 8;
+const BASE_SQUARE_SIZE = 0.3;
+const LEVEL_DURATION = 20000; // 20 seconds
+const ROTATION_ZONE_RADIUS = 120;
+const SHAPE_CHANGE_COOLDOWN = 1500;
+const MAX_SHAPE_SIZE = 0.45;
+const BONUS_FRUIT_CHANCE = 0.1; // 10% chance for bonus fruit
+const BONUS_FRUIT_DURATION = 8000; // 8 seconds
 
-// Shape types - all larger than square (1.0)
+// Shape types
 const SHAPES = {
-    SQUARE: {name: 'square', sizeFactor: 1.3},
-    TRIANGLE: {name: 'triangle', sizeFactor: 2},
-    PENTAGON: {name: 'pentagon', sizeFactor: 1.5},
-    CIRCLE: {name: 'circle', sizeFactor: 1.7},
-    HEXAGON: {name: 'hexagon', sizeFactor: 1.5}
+    SQUARE: {name: 'square', sizeFactor: 1.3, color: '#FF5252'},
+    TRIANGLE: {name: 'triangle', sizeFactor: 2, color: '#FF9800'},
+    PENTAGON: {name: 'pentagon', sizeFactor: 1.5, color: '#4CAF50'},
+    CIRCLE: {name: 'circle', sizeFactor: 1.7, color: '#2196F3'},
+    HEXAGON: {name: 'hexagon', sizeFactor: 1.5, color: '#9C27B0'},
+    STAR: {name: 'star', sizeFactor: 1.8, color: '#FFEB3B'}
+};
+
+// Fruit types
+const FRUITS = {
+    NORMAL: {color: '#2196F3', points: 10},
+    BONUS: {color: '#FFC107', points: 30, effect: 'slow'},
+    SUPER: {color: '#E91E63', points: 50, effect: 'extraLife'}
 };
 
 // Game state
@@ -192,6 +323,7 @@ const state = {
     bally: 0,
     speed: 1,
     score: 0,
+    highScore: localStorage.getItem('highScore') || 0,
     ballAngle: 0,
     isBallActive: false,
     leftPressed: false,
@@ -203,11 +335,21 @@ const state = {
     lastShapeChangeTime: 0,
     showShapeChangeEffect: false,
     shapeChangeEffectTime: 0,
+    level: 1,
+    lives: 3,
+    currentFruit: FRUITS.NORMAL,
+    bonusActive: false,
+    bonusEndTime: 0,
+    slowMotion: false,
+    coins: parseInt(localStorage.getItem('coins')) || 0,
+    skins: JSON.parse(localStorage.getItem('skins')) || {ball: 'default', shapes: 'default'},
     audio: {
-        stena: new Audio("stena.mp3"),
-        fruit: new Audio("fruit.mp3"),
-        gameover: new Audio("gameover.mp3"),
-        shapeChange: new Audio("shapeChange.mp3")
+        stena: new Audio("https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3"),
+        fruit: new Audio("https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"),
+        gameover: new Audio("https://assets.mixkit.co/sfx/preview/mixkit-retro-arcade-lose-2027.mp3"),
+        shapeChange: new Audio("https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3"),
+        bonus: new Audio("https://assets.mixkit.co/sfx/preview/mixkit-bonus-earned-in-video-game-2058.mp3"),
+        levelup: new Audio("https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3")
     }
 };
 
@@ -216,17 +358,32 @@ const elements = {
     menu: document.getElementById('menu'),
     canvas: document.getElementById('canvas'),
     newGameBtn: document.getElementById('new_game'),
+    continueBtn: document.getElementById('continue_game'),
     restartBtn: document.getElementById('restart_btn'),
     leftBtn: document.getElementById('left_btn'),
-    stopBtn: document.getElementById('stop_btn'),
-    rightBtn: document.getElementById('right_btn')
+    rightBtn: document.getElementById('right_btn'),
+    shopBtn: document.getElementById('shop-btn'),
+    levelUp: document.querySelector('.level-up'),
+    bonusNotification: document.querySelector('.bonus-notification'),
+    adContainer: document.getElementById('ad-container'),
+    closeAd: document.getElementById('close-ad')
 };
 
 // Initialize game
 function init() {
     setupCanvas();
     setupEventListeners();
+    preloadAudio();
     showMenu();
+}
+
+function preloadAudio() {
+    // Preload all audio files
+    for (const key in state.audio) {
+        if (state.audio[key]) {
+            state.audio[key].load();
+        }
+    }
 }
 
 function setupCanvas() {
@@ -271,6 +428,10 @@ function resetGame() {
     state.lastLevelChangeTime = performance.now();
     state.lastShapeChangeTime = 0;
     state.showShapeChangeEffect = false;
+    state.level = 1;
+    state.lives = 3;
+    state.bonusActive = false;
+    state.slowMotion = false;
 }
 
 function placeNewFruit() {
@@ -280,12 +441,25 @@ function placeNewFruit() {
     
     state.ballx = state.centerX + distance * Math.cos(angle);
     state.bally = state.centerY + distance * Math.sin(angle);
+    
+    // Random chance for bonus fruit
+    if (Math.random() < BONUS_FRUIT_CHANCE && !state.bonusActive) {
+        state.currentFruit = Math.random() < 0.7 ? FRUITS.BONUS : FRUITS.SUPER;
+        state.bonusActive = true;
+        state.bonusEndTime = performance.now() + BONUS_FRUIT_DURATION;
+    } else {
+        state.currentFruit = FRUITS.NORMAL;
+        state.bonusActive = false;
+    }
 }
 
 function setupEventListeners() {
     // Button events
     elements.newGameBtn.addEventListener('click', newGame);
+    elements.continueBtn.addEventListener('click', continueGame);
     elements.restartBtn.addEventListener('click', restart);
+    elements.shopBtn.addEventListener('click', showShop);
+    elements.closeAd.addEventListener('click', closeAd);
     
     // Control buttons
     elements.leftBtn.addEventListener('mousedown', () => state.leftPressed = true);
@@ -300,12 +474,6 @@ function setupEventListeners() {
         state.rightPressed = true;
     });
     
-    elements.stopBtn.addEventListener('mousedown', stop);
-    elements.stopBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        stop();
-    });
-    
     // Release events
     const releaseControls = () => {
         state.leftPressed = false;
@@ -314,6 +482,18 @@ function setupEventListeners() {
     
     document.addEventListener('mouseup', releaseControls);
     document.addEventListener('touchend', releaseControls);
+    
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') state.leftPressed = true;
+        if (e.key === 'ArrowRight') state.rightPressed = true;
+        if (e.key === ' ') stop();
+    });
+    
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft') state.leftPressed = false;
+        if (e.key === 'ArrowRight') state.rightPressed = false;
+    });
     
     // Window resize
     window.addEventListener('resize', () => {
@@ -325,6 +505,12 @@ function setupEventListeners() {
 function newGame() {
     hideMenu();
     resetGame();
+    requestAnimationFrame(gameLoop);
+}
+
+function continueGame() {
+    hideMenu();
+    state.gameActive = true;
     requestAnimationFrame(gameLoop);
 }
 
@@ -340,44 +526,117 @@ function stop() {
 function showMenu() {
     elements.menu.style.display = "flex";
     state.gameActive = false;
+    
+    // Show continue button if game was in progress
+    if (state.lives > 0 && state.score > 0) {
+        elements.continueBtn.style.display = "block";
+    } else {
+        elements.continueBtn.style.display = "none";
+    }
 }
 
 function hideMenu() {
     elements.menu.style.display = "none";
 }
 
+function showShop() {
+    // In a real implementation, this would show a shop UI
+    alert(`Shop coming soon!\n\nYour coins: ${state.coins}\n\nAvailable purchases:\n- Ball skins\n- Shape skins\n- Extra lives\n- Remove ads`);
+}
+
+function showAd() {
+    // In a real game, this would show an actual ad
+    elements.adContainer.style.display = "flex";
+    setTimeout(closeAd, 5000); // Auto-close after 5 seconds
+}
+
+function closeAd() {
+    elements.adContainer.style.display = "none";
+    // Reward player for watching ad
+    addCoins(10);
+}
+
+function addCoins(amount) {
+    state.coins += amount;
+    localStorage.setItem('coins', state.coins);
+    showBonusNotification(`+${amount} Coins!`);
+}
+
 function gameOver() {
+    // Update high score
+    if (state.score > state.highScore) {
+        state.highScore = state.score;
+        localStorage.setItem('highScore', state.highScore);
+    }
+    
     state.ctx.beginPath();
-    state.ctx.fillStyle = "#00F";
-    state.ctx.strokeStyle = "#F00";
-    state.ctx.font = "MedievalSharp 20pt Arial";
-    state.ctx.fillText("Game Over", state.centerX - 70, state.centerY - 20);
+    state.ctx.fillStyle = "#FFF";
+    state.ctx.strokeStyle = "#E91E63";
+    state.ctx.lineWidth = 3;
+    state.ctx.font = "bold 28px Arial";
+    state.ctx.textAlign = "center";
+    state.ctx.fillText("Game Over", state.centerX, state.centerY - 30);
+    state.ctx.strokeText("Game Over", state.centerX, state.centerY - 30);
+    state.ctx.font = "20px Arial";
+    state.ctx.fillText(`Score: ${state.score}`, state.centerX, state.centerY + 10);
+    state.ctx.fillText(`High Score: ${state.highScore}`, state.centerX, state.centerY + 40);
+    
     state.audio.gameover.play().catch(e => console.log("Audio play failed:", e));
     state.gameActive = false;
-    setTimeout(showMenu, 1500);
+    
+    // Show ad 50% of the time
+    if (Math.random() < 0.5) {
+        setTimeout(showAd, 1000);
+    }
+    
+    setTimeout(showMenu, 2000);
 }
 
 function playCollisionSound() {
+    state.audio.stena.currentTime = 0;
     state.audio.stena.play().catch(e => console.log("Audio play failed:", e));
 }
 
 function playFruitSound() {
+    state.audio.fruit.currentTime = 0;
     state.audio.fruit.play().catch(e => console.log("Audio play failed:", e));
 }
 
 function playShapeChangeSound() {
+    state.audio.shapeChange.currentTime = 0;
     state.audio.shapeChange.play().catch(e => console.log("Audio play failed:", e));
 }
 
+function playBonusSound() {
+    state.audio.bonus.currentTime = 0;
+    state.audio.bonus.play().catch(e => console.log("Audio play failed:", e));
+}
+
+function playLevelUpSound() {
+    state.audio.levelup.currentTime = 0;
+    state.audio.levelup.play().catch(e => console.log("Audio play failed:", e));
+}
+
+function showLevelUp() {
+    elements.levelUp.style.opacity = 1;
+    elements.levelUp.textContent = `Level ${state.level}!`;
+    playLevelUpSound();
+    setTimeout(() => {
+        elements.levelUp.style.opacity = 0;
+    }, 1500);
+}
+
+function showBonusNotification(text) {
+    elements.bonusNotification.textContent = text;
+    elements.bonusNotification.style.opacity = 1;
+    setTimeout(() => {
+        elements.bonusNotification.style.opacity = 0;
+    }, 2000);
+}
+
 function getShapePoints() {
-    // Calculate size ensuring it doesn't go out of bounds
-    const maxPossibleSize = Math.min(
-        Math.min(state.width, state.height) * MAX_SHAPE_SIZE / Math.sqrt(2),
-        state.squareHalfDiagonal * state.currentShape.sizeFactor
-    );
-    
     const size = Math.min(
-        maxPossibleSize,
+        Math.min(state.width, state.height) * MAX_SHAPE_SIZE / Math.sqrt(2),
         state.squareHalfDiagonal * state.currentShape.sizeFactor
     );
     
@@ -427,12 +686,22 @@ function getShapePoints() {
             break;
             
         case 'circle':
-            // For circle, we'll return points approximating a circle
             for (let i = 0; i < 16; i++) {
                 const angle = state.angle + i * TWO_PI / 16;
                 points.push({
                     x: state.centerX + size * Math.cos(angle),
                     y: state.centerY + size * Math.sin(angle)
+                });
+            }
+            break;
+            
+        case 'star':
+            for (let i = 0; i < 10; i++) {
+                const angle = state.angle + i * TWO_PI / 10;
+                const radius = i % 2 === 0 ? size : size * 0.5;
+                points.push({
+                    x: state.centerX + radius * Math.cos(angle),
+                    y: state.centerY + radius * Math.sin(angle)
                 });
             }
             break;
@@ -449,17 +718,12 @@ function checkCollisions() {
         const p1 = shapePoints[i];
         const p2 = shapePoints[(i + 1) % numSides];
         
-        // Vector of the shape side
         const sideVec = { x: p2.x - p1.x, y: p2.y - p1.y };
-        
-        // Vector from p1 to ball
         const ballVec = { x: state.positionBallX - p1.x, y: state.positionBallY - p1.y };
         
-        // Project ball vector onto side vector
         const sideLength = Math.hypot(sideVec.x, sideVec.y);
         const dotProduct = (ballVec.x * sideVec.x + ballVec.y * sideVec.y) / (sideLength * sideLength);
         
-        // Find closest point on the side to the ball
         let closestPoint;
         if (dotProduct < 0) {
             closestPoint = p1;
@@ -472,26 +736,20 @@ function checkCollisions() {
             };
         }
         
-        // Distance from ball to closest point on the side
         const distance = Math.hypot(state.positionBallX - closestPoint.x, state.positionBallY - closestPoint.y);
         
-        // If collision detected
         if (distance <= BALL_RADIUS) {
-            // Calculate normal vector to the side
             const normal = {
                 x: -sideVec.y / sideLength,
                 y: sideVec.x / sideLength
             };
             
-            // Calculate reflection angle (angle of incidence = angle of reflection)
             const incidenceAngle = Math.atan2(Math.sin(state.ballAngle), Math.cos(state.ballAngle));
             const normalAngle = Math.atan2(normal.y, normal.x);
             const reflectionAngle = 2 * normalAngle - incidenceAngle + PI;
             
-            // Update ball direction
             state.ballAngle = reflectionAngle;
             
-            // Move ball slightly away from the side to prevent sticking
             state.positionBallX += normal.x * (BALL_RADIUS - distance + 1);
             state.positionBallY += normal.y * (BALL_RADIUS - distance + 1);
             
@@ -503,25 +761,65 @@ function checkCollisions() {
     // Check collision with center
     const distanceToCenter = Math.hypot(state.centerX - state.positionBallX, state.centerY - state.positionBallY);
     if (distanceToCenter <= CENTER_RADIUS + BALL_RADIUS) {
-        state.isBallActive = false;
-        gameOver();
+        state.lives--;
+        if (state.lives <= 0) {
+            state.isBallActive = false;
+            gameOver();
+        } else {
+            // Reset ball position
+            state.positionBallX = state.centerX;
+            state.positionBallY = state.centerY - state.squareHalfDiagonal * 0.7;
+            state.ballAngle = Math.random() * TWO_PI;
+            showBonusNotification(`Lives left: ${state.lives}`);
+        }
     }
     
     // Check collision with fruit
     const distanceToFruit = Math.hypot(state.positionBallX - state.ballx, state.positionBallY - state.bally);
     if (distanceToFruit <= FRUIT_RADIUS + BALL_RADIUS) {
+        // Add score based on fruit type
+        state.score += state.currentFruit.points;
+        
+        // Apply fruit effect if any
+        if (state.currentFruit.effect === 'slow') {
+            state.slowMotion = true;
+            setTimeout(() => {
+                state.slowMotion = false;
+            }, 5000);
+            showBonusNotification("Slow Motion!");
+        } else if (state.currentFruit.effect === 'extraLife') {
+            state.lives++;
+            showBonusNotification("+1 Life!");
+        }
+        
+        // Add coins occasionally
+        if (Math.random() < 0.2) {
+            addCoins(1);
+        }
+        
         placeNewFruit();
-        state.score += 10;
         state.speed = Math.min(state.speed + 0.1, MAX_SPEED);
-        playFruitSound();
+        
+        if (state.currentFruit !== FRUITS.NORMAL) {
+            playBonusSound();
+        } else {
+            playFruitSound();
+        }
+    }
+    
+    // Check if bonus fruit expired
+    if (state.bonusActive && performance.now() > state.bonusEndTime) {
+        state.bonusActive = false;
+        state.currentFruit = FRUITS.NORMAL;
     }
 }
 
 function updateBallPosition() {
     if (!state.isBallActive) return;
     
-    state.positionBallX += state.speed * Math.cos(state.ballAngle);
-    state.positionBallY += state.speed * Math.sin(state.ballAngle);
+    const speed = state.slowMotion ? state.speed * 0.5 : state.speed;
+    state.positionBallX += speed * Math.cos(state.ballAngle);
+    state.positionBallY += speed * Math.sin(state.ballAngle);
     
     // Boundary checks
     if (state.positionBallX < BALL_RADIUS) {
@@ -546,8 +844,9 @@ function updateSquareRotation() {
     if (!state.gameActive) return;
     
     // Update angle based on controls
-    if (state.leftPressed) state.angle -= 0.03;
-    if (state.rightPressed) state.angle += 0.03;
+    const rotationSpeed = state.slowMotion ? 0.02 : 0.04;
+    if (state.leftPressed) state.angle -= rotationSpeed;
+    if (state.rightPressed) state.angle += rotationSpeed;
     
     // Keep angle in reasonable range
     if (state.angle > PI) state.angle -= TWO_PI;
@@ -563,23 +862,32 @@ function changeLevel() {
     const shapeKeys = Object.keys(SHAPES);
     let newShape;
     
-    // Get a random shape different from current one
     do {
         newShape = SHAPES[shapeKeys[Math.floor(Math.random() * shapeKeys.length)]];
     } while (newShape === state.currentShape && shapeKeys.length > 1);
     
     state.currentShape = newShape;
+    state.level++;
     state.lastLevelChangeTime = performance.now();
     state.showShapeChangeEffect = true;
     state.shapeChangeEffectTime = performance.now();
     playShapeChangeSound();
+    showLevelUp();
+    
+    // Show ad every 3 levels
+    if (state.level % 3 === 0) {
+        setTimeout(showAd, 1000);
+    }
 }
 
 function draw() {
     const ctx = state.ctx;
     
-    // Clear canvas with yellow background
-    ctx.fillStyle = "yellow";
+    // Clear canvas with gradient background
+    const gradient = ctx.createLinearGradient(0, 0, state.width, state.height);
+    gradient.addColorStop(0, '#ffeb3b');
+    gradient.addColorStop(1, '#ffc107');
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, state.width, state.height);
     
     // Draw current shape
@@ -587,8 +895,8 @@ function draw() {
     const numSides = shapePoints.length;
     
     ctx.beginPath();
-    ctx.strokeStyle = "red";
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = state.currentShape.color;
+    ctx.lineWidth = 6;
     ctx.moveTo(shapePoints[0].x, shapePoints[0].y);
     
     for (let i = 1; i <= numSides; i++) {
@@ -596,50 +904,123 @@ function draw() {
     }
     
     ctx.closePath();
-    ctx.fillStyle = "yellow";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
     ctx.fill();
     ctx.stroke();
     
     // Draw center
     ctx.beginPath();
     ctx.arc(state.centerX, state.centerY, CENTER_RADIUS, 0, TWO_PI);
-    ctx.strokeStyle = "green";
-    ctx.lineWidth = 3;
-    ctx.fillStyle = "green";
+    ctx.strokeStyle = "#E91E63";
+    ctx.lineWidth = 4;
+    ctx.fillStyle = "#E91E63";
     ctx.fill();
     ctx.stroke();
     
-    // Draw ball
+    // Draw ball with current skin
     ctx.beginPath();
     ctx.arc(state.positionBallX, state.positionBallY, BALL_RADIUS, 0, TWO_PI);
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "#333";
     ctx.lineWidth = 2;
-    ctx.fillStyle = "#28d1aa";
+    
+    // Different ball skins
+    if (state.skins.ball === 'premium') {
+        // Premium ball skin
+        const ballGradient = ctx.createRadialGradient(
+            state.positionBallX - BALL_RADIUS/3, 
+            state.positionBallY - BALL_RADIUS/3, 
+            BALL_RADIUS/4,
+            state.positionBallX, 
+            state.positionBallY, 
+            BALL_RADIUS
+        );
+        ballGradient.addColorStop(0, '#FFEB3B');
+        ballGradient.addColorStop(1, '#FF5722');
+        ctx.fillStyle = ballGradient;
+    } else {
+        // Default ball skin
+        ctx.fillStyle = "#4CAF50";
+    }
+    
     ctx.fill();
     ctx.stroke();
     
-    // Draw fruit (blue circle)
+    // Draw eyes on ball
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    ctx.arc(
+        state.positionBallX - BALL_RADIUS/3, 
+        state.positionBallY - BALL_RADIUS/4, 
+        BALL_RADIUS/4, 
+        0, 
+        TWO_PI
+    );
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+    ctx.arc(
+        state.positionBallX - BALL_RADIUS/3, 
+        state.positionBallY - BALL_RADIUS/4, 
+        BALL_RADIUS/8, 
+        0, 
+        TWO_PI
+    );
+    ctx.fill();
+    
+    // Draw fruit
     ctx.beginPath();
     ctx.arc(state.ballx, state.bally, FRUIT_RADIUS, 0, TWO_PI);
-    ctx.strokeStyle = "blue";
+    ctx.strokeStyle = state.currentFruit.color;
     ctx.lineWidth = 2;
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = state.currentFruit.color;
     ctx.fill();
     ctx.stroke();
     
-    // Draw score and speed
-    ctx.fillStyle = "#00F";
-    ctx.strokeStyle = "#F00";
-    ctx.font = "MedievalSharp 16px Arial";
-    ctx.fillText("Score: " + state.score, 20, 30);
-    ctx.fillText("Speed: " + state.speed.toFixed(1), state.width - 120, 30);
+    // Draw score, speed and level
+    ctx.fillStyle = "#1976D2";
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.font = "bold 18px Arial";
+    ctx.textAlign = "left";
     
-    // Draw current shape info
-    ctx.fillText("Shape: " + state.currentShape.name, state.width / 2 - 50, 30);
+    // Score
+    ctx.strokeText("Score: " + state.score, 20, 30);
+    ctx.fillText("Score: " + state.score, 20, 30);
+    
+    // Speed
+    ctx.strokeText("Speed: " + state.speed.toFixed(1), 20, 60);
+    ctx.fillText("Speed: " + state.speed.toFixed(1), 20, 60);
+    
+    // Level
+    ctx.strokeText("Level: " + state.level, 20, 90);
+    ctx.fillText("Level: " + state.level, 20, 90);
+    
+    // Lives
+    ctx.strokeText("Lives: " + state.lives, state.width - 100, 30);
+    ctx.fillText("Lives: " + state.lives, state.width - 100, 30);
+    
+    // Coins
+    ctx.strokeText("Coins: " + state.coins, state.width - 100, 60);
+    ctx.fillText("Coins: " + state.coins, state.width - 100, 60);
+    
+    // Current shape
+    ctx.textAlign = "center";
+    ctx.strokeText("Shape: " + state.currentShape.name, state.width / 2, 30);
+    ctx.fillText("Shape: " + state.currentShape.name, state.width / 2, 30);
+    
+    // Draw rotation zone indicator if ball is near center
+    if (isBallInRotationZone()) {
+        ctx.beginPath();
+        ctx.arc(state.centerX, state.centerY, ROTATION_ZONE_RADIUS, 0, TWO_PI);
+        ctx.strokeStyle = "rgba(25, 118, 210, 0.5)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
     
     // Draw shape change effect if active
     if (state.showShapeChangeEffect) {
-        const effectDuration = 500; // 0.5 seconds
+        const effectDuration = 500;
         const elapsed = performance.now() - state.shapeChangeEffectTime;
         if (elapsed < effectDuration) {
             const alpha = 1 - (elapsed / effectDuration);
@@ -654,12 +1035,24 @@ function draw() {
             state.showShapeChangeEffect = false;
         }
     }
+    
+    // Draw bonus fruit timer if active
+    if (state.bonusActive && state.currentFruit !== FRUITS.NORMAL) {
+        const remaining = (state.bonusEndTime - performance.now()) / BONUS_FRUIT_DURATION;
+        if (remaining > 0) {
+            ctx.beginPath();
+            ctx.arc(state.ballx, state.bally, FRUIT_RADIUS + 2, 0, TWO_PI * remaining, true);
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+    }
 }
 
 function gameLoop(timestamp) {
     if (!state.gameActive) return;
     
-    // Check if it's time to change level and ball is in rotation zone
+    // Check if it's time to change level
     if (timestamp - state.lastLevelChangeTime > LEVEL_DURATION && 
         isBallInRotationZone() && 
         timestamp - state.lastShapeChangeTime > SHAPE_CHANGE_COOLDOWN) {
